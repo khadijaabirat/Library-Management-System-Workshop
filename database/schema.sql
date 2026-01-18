@@ -58,9 +58,8 @@ CREATE TABLE library_branches (
     member_type ENUM('Student', 'Faculty') NOT NULL,
     registration_date DATE DEFAULT (CURRENT_DATE),
     expiry_date DATE NOT NULL,
-    balance_fines DECIMAL(10, 2) DEFAULT 0.00, -- To check the $10 limit
-    status ENUM('Active', 'Suspended', 'Expired') DEFAULT 'Active',
-    CONSTRAINT check_fine_limit CHECK (balance_fines <= 100.00) -- Safety check
+    balance_fines DECIMAL(10, 2) DEFAULT 0.00 CHECK (balance_fines <= 100.00) , 
+    status ENUM('Active', 'Suspended', 'Expired') DEFAULT 'Active'
 );
  CREATE TABLE loans (
     loan_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -69,7 +68,7 @@ CREATE TABLE library_branches (
     borrow_date DATE DEFAULT (CURRENT_DATE),
     due_date DATE NOT NULL,
     return_date DATE NULL,
-    is_renewed BOOLEAN DEFAULT FALSE, -- To enforce "Renewed once"
+    is_renewed BOOLEAN DEFAULT FALSE, 
     fine_amount DECIMAL(10, 2) DEFAULT 0.00,
     FOREIGN KEY (member_id) REFERENCES members(member_id),
     FOREIGN KEY (copy_id) REFERENCES book_copies(copy_id)
@@ -81,7 +80,7 @@ CREATE TABLE library_branches (
     isbn VARCHAR(20),
     branch_id INT,
     reservation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    notification_sent_at TIMESTAMP NULL, -- To track the 48h pickup window
+    notification_sent_at TIMESTAMP NULL,  
     status ENUM('Pending', 'Notified', 'Completed', 'Cancelled', 'Expired') DEFAULT 'Pending',
     FOREIGN KEY (member_id) REFERENCES members(member_id),
     FOREIGN KEY (isbn) REFERENCES books(isbn),
